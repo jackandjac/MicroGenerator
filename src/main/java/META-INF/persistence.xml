@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="codegen">
+		<class>com.isolver.codegenerator.codegen.entities.CommVal</class>
+		<class>com.isolver.codegenerator.codegen.entities.CommValPK</class>
+		<class>com.isolver.codegenerator.codegen.entities.CustomerAddress</class>
+		<class>com.isolver.codegenerator.codegen.entities.CustomerMaster</class>
+		<class>com.isolver.codegenerator.codegen.entities.CustomerMasterExtension</class>
+		<class>com.isolver.codegenerator.codegen.entities.IndvEmail</class>
+		<class>com.isolver.codegenerator.codegen.entities.PhoneNum</class>
+		<class>com.isolver.codegenerator.codegen.entities.MshpTypeAssoc</class>
+		<class>com.isolver.codegenerator.codegen.entities.MshpSetEmpmt</class>
+		<class>com.isolver.codegenerator.codegen.entities.ConstituentsEmpmtAux</class>
+		<class>com.isolver.codegenerator.codegen.entities.EmpmtPositionSubject</class>
+		<class>com.isolver.codegenerator.codegen.entities.MshpOblig</class>
+		<class>com.isolver.codegenerator.codegen.entities.IndvAnnualPymtMethod</class>
+		<class>com.isolver.codegenerator.codegen.entities.IndvAnnualPymtMethodPK</class>
+		<class>com.isolver.codegenerator.codegen.entities.Address</class>
+	</persistence-unit>
+</persistence>
