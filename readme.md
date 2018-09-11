@@ -1,0 +1,1 @@
+1. Needs to add classes/entities constraints/rules to manage the entities in the microservices project. Allow or avoid there are multi vairations of the same entity the are origin from exist in the project.

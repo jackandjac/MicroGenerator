@@ -47,6 +47,9 @@ public class ControllerGenerator {
 		importLib.add("import org.springframework.beans.factory.annotation.*;");
 		importLib.add("import org.springframework.stereotype.*;");
 	}
+	public String genControllerName(EntityClassEntry ce) {
+		return this.genClassHeader(ce);
+	}
 	public String genController(EntityClassEntry ce) {
 		StringBuffer body = new StringBuffer("");
 		CGUtil.genPackageImport(body,configuration.getController_package_name(), this.importLib);
@@ -223,7 +226,7 @@ public class ControllerGenerator {
 	}
 
 	private String genClassHeader(EntityClassEntry ce) {
-		return ce.getClassName() + "Controller";
+		return CGUtil.genSimpleClassType( ce.getClassName()) + "Controller";
 
 	}
 

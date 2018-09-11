@@ -23,6 +23,7 @@ public class RepositoryGenerator {
 		importList.add("import org.springframework.stereotype.*;");
 		packageName="pakcage com.isolver.repos;";
 	}
+
 	public String genJpaRepo(EntityClassEntry ce) {
 		StringBuffer repo = new StringBuffer("");
 		repo.append(packageName);
@@ -57,6 +58,8 @@ public class RepositoryGenerator {
 	public String genRepoName(EntityClassEntry ce) {
 		return CGUtil.genSimpleClassType(ce.getClassName()) + "Repo";
 	}
+	
+
 
 
 
