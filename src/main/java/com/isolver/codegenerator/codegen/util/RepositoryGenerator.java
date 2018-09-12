@@ -21,11 +21,13 @@ public class RepositoryGenerator {
 		importList.add("import org.springframework.data.repository.query.*;");
 		importList.add("import org.springframework.beans.factory.annotation.*;");
 		importList.add("import org.springframework.stereotype.*;");
-		packageName="pakcage com.isolver.repos;";
+		
 	}
 
 	public String genJpaRepo(EntityClassEntry ce) {
 		StringBuffer repo = new StringBuffer("");
+
+		packageName ="pakcage "+ce.getBasePackageName()+".repos;";
 		repo.append(packageName);
 		CGUtil.addLineBreak(repo, 2);
 
@@ -58,6 +60,8 @@ public class RepositoryGenerator {
 	public String genRepoName(EntityClassEntry ce) {
 		return CGUtil.genSimpleClassType(ce.getClassName()) + "Repo";
 	}
+	
+
 	
 
 

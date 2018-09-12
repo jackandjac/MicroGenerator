@@ -7,16 +7,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class FolderStructureGenerator {
+import com.google.common.io.Files;
+
+public class IUtils {
    // src/main/java
    // src/main/resources
    // src/test/java
-
+    public static final String SRC_JAVA="src\\main\\java";
+    public static final String SRC_RESOURCES="src\\main\\resources";
 	public static void genFolderStructure() {
 		
 	}
@@ -81,4 +86,65 @@ public class FolderStructureGenerator {
 		     }
 		     new File(path).mkdirs();
 		}
+	
+	public static String  packagePathGen(String pname, String basepath) {
+	     String[] res=pname.split("\\.");
+	     String path=basepath;
+	     for(int i=0;i<res.length;i++) {
+	        path=path+File.separator+res[i];
+	     }
+	    return path;
+	}
+	public static void filesGenerate(List<ClassEmbody> files, File baseFolder) {
+		for(ClassEmbody item: files) {
+			if(item.getExt().equals(ClassEmbody.JAVA_EXT)) { // write to the SRC_JAVA folder
+				String path =packagePathGen(item.getPackage_name(),baseFolder.getAbsolutePath()+File.separator+SRC_JAVA);
+				File tf=new File(path);
+			    if(!tf.exists()) {//create the folders if it does not exist
+			    	tf.mkdirs();
+			    }
+			    File tar=new File(path+File.separator+item.getName()+ClassEmbody.JAVA_EXT);
+			    try {
+			    	if(!tar.exists() ) {
+			    		tar.createNewFile();
+			    	}
+					Files.asCharSink(tar, Charset.forName("utf-8")).write(item.getContent());
+				} catch (IOException e) {
+					e.printStackTrace();
+				};  		
+			    
+			}else if(item.getExt().equals(ClassEmbody.PROP_EXT)) { // write to the SRC_RESOURCES
+				String path =packagePathGen(baseFolder.getAbsolutePath()+File.separator+SRC_RESOURCES,item.getPackage_name());
+				File tf=new File(path);
+			    if(!tf.exists()) {//create the folders if it does not exist
+			    	tf.mkdirs();
+			    }
+			    File tar=new File(path+File.separator+item.getName()+ClassEmbody.PROP_EXT);
+			    try {
+			    	if(!tar.exists() ) {
+			    		tar.createNewFile();
+			    	}
+					Files.asCharSink(tar, Charset.forName("utf-8")).write(item.getContent());
+				} catch (IOException e) {
+					e.printStackTrace();
+				};
+			}else { // pom.xml write to the BASE folder
+				String path =baseFolder.getAbsolutePath();
+				File tf=new File(path);
+			    if(!tf.exists()) {//create the folders if it does not exist
+			    	tf.mkdirs();
+			    }
+			    File tar=new File(path+File.separator+item.getName()+ClassEmbody.XML_EXT);
+			    try {
+			    	if(!tar.exists() ) {
+			    		tar.createNewFile();
+			    	}
+					Files.asCharSink(tar, Charset.forName("utf-8")).write(item.getContent());
+				} catch (IOException e) {
+					e.printStackTrace();
+				};
+			}
+		}
+	}
+	
 }

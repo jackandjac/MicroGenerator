@@ -8,7 +8,7 @@ public class EntityClassEntry {
 	// Table Entity NamedQuery @Embeddable
 	private String className;
 	private String TableName;
-	private String packageName;
+	private String basePackageName;
 	private String idType;
 	private String idName;
 	private boolean entity;
@@ -25,7 +25,7 @@ public class EntityClassEntry {
 		super();
 		this.className = className;
 		TableName = tableName;
-		this.packageName = packageName;
+		this.basePackageName = packageName;
 		this.idType = idType;
 		this.idName = idName;
 		this.entity = entity;
@@ -50,12 +50,14 @@ public class EntityClassEntry {
 	}
 
 
-	public String getPackageName() {
-		return packageName;
+	public String getBasePackageName() {
+		return basePackageName;
 	}
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
+
+	public void setBasePackageName(String basePackageName) {
+		this.basePackageName = basePackageName;
 	}
+
 	public String getClassName() {
 		return className;
 	}

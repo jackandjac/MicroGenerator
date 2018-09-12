@@ -51,14 +51,14 @@ public class EntityClassGenerator {
 		return sb.toString();
 	}
 	
-	private String genPackageInfo() {
-		return "package " + this.configuration.getPackage_name()+";";
+	private String genPackageInfo(EntityClassEntry ce) {
+		return "package " + ce.getBasePackageName()+".entities;";
 	}
 
 	
-	public String genEmbeddableClassHeader(String className) {
+	public String genEmbeddableClassHeader(EntityClassEntry ce) {
 		StringBuffer header =new StringBuffer("");
-		header.append(this.genPackageInfo());
+		header.append(this.genPackageInfo(ce));
 		CGUtil.addLineBreak(header,2);
 
 		
@@ -67,7 +67,7 @@ public class EntityClassGenerator {
 
 		
 		header.append(EMBEDDABLE_TAG).append('\r').append('\n');
-		header.append(genGenericClassHeader(CGUtil.genSimpleClassType(className)));
+		header.append(genGenericClassHeader(CGUtil.genSimpleClassType(ce.getClassName())));
 		header.append(SUID_TEMPLATE).append('\r').append('\n');
         CGUtil.addLineBreak(header,3);
 
@@ -79,11 +79,11 @@ public class EntityClassGenerator {
 		StringBuffer cd=new StringBuffer("");
 		
 		if(ce.isEmbeddable()) {
-		   cd.append(this.genEmbeddableClassHeader(ce.getClassName()));
+		   cd.append(this.genEmbeddableClassHeader(ce));
 
 			
 		}else {
-		   cd.append(this.genEntityClassHeader(ce.getClassName(), ce.getTableName()));
+		   cd.append(this.genEntityClassHeader(ce));
 		}
 		   CGUtil.addLineBreak(cd);
 		   cd.append(this.genClassBody(ce.getRecords()));
@@ -230,11 +230,13 @@ public class EntityClassGenerator {
 		return " } ";	
 	}
 	
-	public String genEntityClassHeader(String className,String tableName) {
+	public String genEntityClassHeader(EntityClassEntry ce) {
+		String tableName=ce.getTableName();
+		String className=ce.getClassName();
 
 		StringBuffer header = new StringBuffer("");
 		
-		header.append(this.genPackageInfo());
+		header.append(this.genPackageInfo(ce));
 		CGUtil.addLineBreak(header,2);
 
 		

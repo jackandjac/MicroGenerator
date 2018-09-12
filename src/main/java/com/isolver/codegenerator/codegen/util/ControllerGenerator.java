@@ -46,13 +46,17 @@ public class ControllerGenerator {
 		importLib.add("import org.springframework.web.bind.annotation.*");
 		importLib.add("import org.springframework.beans.factory.annotation.*;");
 		importLib.add("import org.springframework.stereotype.*;");
+
 	}
 	public String genControllerName(EntityClassEntry ce) {
 		return this.genClassHeader(ce);
 	}
 	public String genController(EntityClassEntry ce) {
 		StringBuffer body = new StringBuffer("");
-		CGUtil.genPackageImport(body,configuration.getController_package_name(), this.importLib);
+		importLib.add("import " +configuration.getPackage_name()+".repos.*;");
+		importLib.add("import " +configuration.getPackage_name()+".controllers.*;");
+		importLib.add("import " +configuration.getPackage_name()+".entities.*;");
+		CGUtil.genPackageImport(body,ce.getBasePackageName()+".controllers", this.importLib);
 		CGUtil.addLineBreak(body, 2);
 
 		body.append(REST_CONTROLLER_TAG);

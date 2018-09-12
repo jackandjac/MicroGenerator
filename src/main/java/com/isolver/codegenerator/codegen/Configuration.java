@@ -13,7 +13,16 @@ public class Configuration {
    private String mainclass_name;
    private String pom_template;
    private String application_template;
+   private String tempdir;
    
+public String getTempdir() {
+	return tempdir;
+}
+
+public void setTempdir(String tempdir) {
+	this.tempdir = tempdir;
+}
+
 public String getApplication_template() {
 	return application_template;
 }

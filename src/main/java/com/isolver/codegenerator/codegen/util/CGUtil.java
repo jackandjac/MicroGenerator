@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
+import com.isolver.codegenerator.codegen.Configuration;
+
 /**
  * Class Generator Util
  * */
@@ -37,7 +39,7 @@ public class CGUtil {
 	}
 	
     public static void genPackageImport(StringBuffer body,String pack,List<String> ilib) {
-		body.append("package ").append( pack );
+		body.append("package ").append( pack ).append(";");
 		CGUtil.addLineBreak(body, 2);
 
 		for (String item : ilib) {
@@ -68,6 +70,8 @@ public class CGUtil {
 			classEntry.setEntity(isEntity);
 			classEntry.setEmbeddable(embeddable);
 			classEntry.setTableName(tableName);
+			
+			
 			
 					
 			for (Field fl : cl.getDeclaredFields()) {
