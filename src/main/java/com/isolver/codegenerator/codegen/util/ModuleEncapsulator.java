@@ -5,6 +5,7 @@ public class ModuleEncapsulator {
     private ClassEmbody entity;
     private ClassEmbody controller;
     private ClassEmbody repo;
+    private ClassEmbody embed;
     
     
 	public ModuleEncapsulator() {
@@ -12,11 +13,23 @@ public class ModuleEncapsulator {
 		// TODO Auto-generated constructor stub
 	}
 	public ModuleEncapsulator(String module_id, ClassEmbody entity, ClassEmbody controller, ClassEmbody repo) {
+	this(module_id,entity, controller, repo,null);
+	}
+	
+	public ModuleEncapsulator(String module_id, ClassEmbody entity, ClassEmbody controller, ClassEmbody repo,
+			ClassEmbody embed) {
 		super();
 		this.module_id = module_id;
 		this.entity = entity;
 		this.controller = controller;
 		this.repo = repo;
+		this.embed = embed;
+	}
+	public ClassEmbody getEmbed() {
+		return embed;
+	}
+	public void setEmbed(ClassEmbody embed) {
+		this.embed = embed;
 	}
 	public String getModule_id() {
 		return module_id;

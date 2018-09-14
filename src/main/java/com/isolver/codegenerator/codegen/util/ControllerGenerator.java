@@ -43,7 +43,7 @@ public class ControllerGenerator {
 		importLib =new ArrayList<>();
 		importLib.add("import java.util.*;");
 		importLib.add("import org.springframework.data.jpa.repository.*;");
-		importLib.add("import org.springframework.web.bind.annotation.*");
+		importLib.add("import org.springframework.web.bind.annotation.*;");
 		importLib.add("import org.springframework.beans.factory.annotation.*;");
 		importLib.add("import org.springframework.stereotype.*;");
 
@@ -53,12 +53,16 @@ public class ControllerGenerator {
 	}
 	public String genController(EntityClassEntry ce) {
 		StringBuffer body = new StringBuffer("");
-		importLib.add("import " +configuration.getPackage_name()+".repos.*;");
-		importLib.add("import " +configuration.getPackage_name()+".controllers.*;");
-		importLib.add("import " +configuration.getPackage_name()+".entities.*;");
-		CGUtil.genPackageImport(body,ce.getBasePackageName()+".controllers", this.importLib);
-		CGUtil.addLineBreak(body, 2);
 
+		CGUtil.genPackageImport(body,ce.getBasePackageName()+".controllers", this.importLib);
+		CGUtil.addLineBreak(body);
+		body.append("import " +configuration.getPackage_name()+".repos.*;");
+		CGUtil.addLineBreak(body);
+		body.append("import " +configuration.getPackage_name()+".controllers.*;");
+		CGUtil.addLineBreak(body);
+		body.append("import " +configuration.getPackage_name()+".entities.*;");
+		CGUtil.addLineBreak(body);
+		
 		body.append(REST_CONTROLLER_TAG);
 		CGUtil.addLineBreak(body);
 		body.append("public class ").append(this.genClassHeader(ce)).append(" { ");
@@ -85,8 +89,8 @@ public class ControllerGenerator {
 	}
 
 	public String genFindAll(EntityClassEntry ce) {
-		String packageName = configuration.getController_package_name();
-		String ph = this.genPath(packageName, "findall");
+		
+		String ph = this.genPath(ce, "findall");
 		StringBuffer sb = new StringBuffer("");
 		sb.append(this.genMappingAnnotate(GET_MAPPING_TAG,ph, Optional.ofNullable(null)));
 		CGUtil.addLineBreak(sb);
@@ -103,13 +107,18 @@ public class ControllerGenerator {
 		return sb.toString();
 	}
 
-	public String genPath(String packageName, String methodName) {
+	
+	public String genPath(EntityClassEntry ce, String methodName) {
+		String packageName=ce.getBasePackageName();
 		String[] path = packageName.split("\\.");
 		StringBuffer pathmap = new StringBuffer("");
 
 		for (String item : path) {
 			pathmap.append("/").append(item);
 		}
+		pathmap.append("/");
+		pathmap.append(CGUtil.genSimpleClassType(ce.getClassName()));
+	
 		pathmap.append("/").append(methodName);
 		return pathmap.toString();
 	}
@@ -117,7 +126,7 @@ public class ControllerGenerator {
 	public String genFindById(EntityClassEntry ce) {
 		StringBuffer body = new StringBuffer("");
 		String paraTag = ce.isHasEmbedabble() ? REQUEST_BODY_TAG : PATH_VARIABLE_TAG;
-		String path = this.genPath(configuration.getController_package_name(), "findbyid");
+		String path = this.genPath(ce, "findbyid");
 		if (ce.isHasEmbedabble()) {
 			body.append(this.genMappingAnnotate(POST_MAPPING_TAG,path, Optional.ofNullable(null)));
 		} else {
@@ -157,7 +166,7 @@ public class ControllerGenerator {
 
 	public String genUpdate(EntityClassEntry ce) {
 		StringBuffer body = new StringBuffer("");
-		String path = this.genPath(configuration.getController_package_name(), "update");
+		String path = this.genPath(ce, "update");
 		body.append(this.genMappingAnnotate(PUT_MAPPING_TAG,path, Optional.ofNullable(null)));
 		CGUtil.addLineBreak(body);
 		String simpleName = CGUtil.genSimpleClassType(ce.getClassName());
@@ -165,12 +174,12 @@ public class ControllerGenerator {
 
 		body.append("public void ");
 		body.append("update").append(simpleName.substring(0, 1).toUpperCase()).append(simpleName.substring(1))
-				.append("(").append(REQUEST_BODY_TAG).append(" ").append(simpleId).append(" ").append(ce.getIdName())
+				.append("(").append(REQUEST_BODY_TAG).append(" ").append(simpleName).append(" ").append(simpleName.toLowerCase())
 				.append(" ) { ");
 		CGUtil.addLineBreak(body, 2);
 		body.append("    ");
 		
-		body.append("return service.save(").append(ce.getIdName()).append(");");
+		body.append(" service.save(").append(simpleName.toLowerCase()).append(");");
 		CGUtil.addLineBreak(body, 2);
 		body.append("}");
 
@@ -180,20 +189,19 @@ public class ControllerGenerator {
 	
 	public String genCreate(EntityClassEntry ce) {
 		StringBuffer body = new StringBuffer("");
-		String path = this.genPath(configuration.getController_package_name(), "create");
+		String path = this.genPath(ce, "create");
 		body.append(this.genMappingAnnotate(PUT_MAPPING_TAG,path, Optional.ofNullable(null)));
 		CGUtil.addLineBreak(body);
 		String simpleName = CGUtil.genSimpleClassType(ce.getClassName());
-		String simpleId = CGUtil.genSimpleClassType(ce.getIdType());
-
+		
 		body.append("public void ");
 		body.append("create").append(simpleName.substring(0, 1).toUpperCase()).append(simpleName.substring(1))
-				.append("(").append(REQUEST_BODY_TAG).append(" ").append(simpleId).append(" ").append(ce.getIdName())
+				.append("(").append(REQUEST_BODY_TAG).append(" ").append(simpleName).append(" ").append(simpleName.toLowerCase())
 				.append(" ) { ");
 		CGUtil.addLineBreak(body, 2);
 		body.append("    ");
 		
-		body.append("return service.save(").append(ce.getIdName()).append(");");
+		body.append(" service.save(").append(simpleName.toLowerCase()).append(");");
 		CGUtil.addLineBreak(body, 2);
 		body.append("}");
 
@@ -204,7 +212,7 @@ public class ControllerGenerator {
 	public String genDeleteById(EntityClassEntry ce) {
 		StringBuffer sb = new StringBuffer("");
 		String paraTag = ce.isHasEmbedabble() ? REQUEST_BODY_TAG : PATH_VARIABLE_TAG;
-		String path = this.genPath(configuration.getController_package_name(), "deletebyid");
+		String path = this.genPath(ce, "deletebyid");
 		if (ce.isHasEmbedabble()) {
 			sb.append(this.genMappingAnnotate(DELETE_MAPPING_TAG, path, Optional.ofNullable(null)));
 		    CGUtil.addLineBreak(sb);
@@ -222,7 +230,7 @@ public class ControllerGenerator {
 		CGUtil.addLineBreak(sb, 2);
 		sb.append("    ");
 		
-		sb.append("return service.deleteById(").append(ce.getIdName()).append(");");
+		sb.append("   service.deleteById(").append(ce.getIdName()).append(");");
 		CGUtil.addLineBreak(sb, 2);
 		sb.append("}");
 

@@ -15,6 +15,7 @@ public class EntityClassEntry {
 	private boolean embeddable;
 	private boolean hasEmbedabble;
 	private List<RecordEntry> records;
+	private EntityClassEntry embedid;
 	
 	public EntityClassEntry() {
 
@@ -32,6 +33,14 @@ public class EntityClassEntry {
 		this.embeddable = embeddable;
 		this.hasEmbedabble = hasEmbedabble;
 		this.records = records;
+	}
+
+	public EntityClassEntry getEmbedid() {
+		return embedid;
+	}
+
+	public void setEmbedid(EntityClassEntry embedid) {
+		this.embedid = embedid;
 	}
 
 	public boolean isHasEmbedabble() {

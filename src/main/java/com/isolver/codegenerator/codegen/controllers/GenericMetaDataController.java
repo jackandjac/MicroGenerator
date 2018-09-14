@@ -29,6 +29,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.isolver.codegenerator.codegen.Configuration;
+import com.isolver.codegenerator.codegen.entities.Address;
+import com.isolver.codegenerator.codegen.repos.AddressRepo;
 import com.isolver.codegenerator.codegen.util.EntityClassEntry;
 import com.isolver.codegenerator.codegen.util.CGUtil;
 import com.isolver.codegenerator.codegen.util.ClassEmbody;
@@ -66,6 +68,8 @@ public class GenericMetaDataController {
 
 	@Autowired
 	private PropertiesGenerator propertiesGenerator;
+	@Autowired
+	private AddressRepo addressRepo;
 
 	private Map<String, ModuleEncapsulator> map = new HashMap<>();
 
@@ -123,6 +127,9 @@ public class GenericMetaDataController {
 		String PACKAGE_NAME = configuration.getEntity_package_name();
 		EntityClassEntry ce = CGUtil.retrieveClassInfo(PACKAGE_NAME + "." + className);
 		ce.setBasePackageName(configuration.getPackage_name());
+		if(ce.isHasEmbedabble()) {
+		ce.getEmbedid().setBasePackageName(configuration.getPackage_name());
+		}
 		return this.generateModuleByEntity(ce);
 	}
 
@@ -164,10 +171,30 @@ public class GenericMetaDataController {
 				new ClassEmbody(ce.getBasePackageName() + ".entities",entityClassName, entity,  ClassEmbody.JAVA_EXT));
 		me.setRepo(new ClassEmbody( ce.getBasePackageName() + ".repos",repoClassName, repo, ClassEmbody.JAVA_EXT));
 		me.setModule_id(uniqueID);
+		if(ce.isHasEmbedabble()) {
+			for(RecordEntry re:ce.getRecords()) {
+				if(re.isEmbeddedId()) {
+					re.getEmbeddedContent().setBasePackageName(configuration.getPackage_name());
+					String content = entityClassGenerator.genClass(re.getEmbeddedContent()); 
+					String eClassName = CGUtil.genSimpleClassType(re.getEmbeddedContent().getClassName());
+					ClassEmbody ceb=new ClassEmbody(configuration.getPackage_name()+".entities",eClassName,content, ClassEmbody.JAVA_EXT);
+					
+					me.setEmbed( ceb);
+				}
+			}
+		}
+		
 		map.put(uniqueID, me);
 		return uniqueID;
 	}
-
+	@GetMapping(path="/isolver/address_all")
+	public List<Address> retrieveAllAddress(){
+		return addressRepo.findAll();
+	}
+	@GetMapping(path="/isolver/address_one/{id}")
+	public Optional<Address> retrieveOneAddress(@PathVariable String id){
+		return addressRepo.findById(id);
+	}
 	@RequestMapping(path = "/isolver/modapp")
 	public void genApp(@RequestBody List<String> list) {
 		String tempfolder = "temp_" + ((int) (Math.random() * 100000));
@@ -180,6 +207,10 @@ public class GenericMetaDataController {
 				clist.add(item.getEntity());
 				clist.add(item.getController());
 				clist.add(item.getRepo());
+				if(item.getEmbed()!=null) {
+					clist.add(item.getEmbed());
+				}
+				
 
 			} catch (ExecutionException e) {
 				// TODO Auto-generated catch block
@@ -187,7 +218,7 @@ public class GenericMetaDataController {
 			}
 		}
 		String mainclass =this.mainclassGenerator.genMainClassBody("DemoServices");
-		ClassEmbody maincb =new ClassEmbody("DemoServices",mainclass,configuration.getPackage_name()+".main", ClassEmbody.JAVA_EXT);
+		ClassEmbody maincb =new ClassEmbody(configuration.getPackage_name()+".main","DemoServices",mainclass, ClassEmbody.JAVA_EXT);
 	    clist.add(maincb);
 	
         String propfile=this.propertiesGenerator.genPropertiesBody();

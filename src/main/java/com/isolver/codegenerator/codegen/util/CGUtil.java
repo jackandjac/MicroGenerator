@@ -139,7 +139,9 @@ public class CGUtil {
                 
 				if(isEmid) {
 					classEntry.setHasEmbedabble(true);
+					EntityClassEntry ceb =retrieveClassInfo(type);
 					entry.setEmbeddedContent(retrieveClassInfo(type));
+					classEntry.setEmbedid(ceb);
 				}
 			
 				list.add(entry);

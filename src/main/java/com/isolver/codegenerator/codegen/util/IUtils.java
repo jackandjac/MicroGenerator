@@ -105,7 +105,7 @@ public class IUtils {
 			    }
 			    File tar=new File(path+File.separator+item.getName()+ClassEmbody.JAVA_EXT);
 			    try {
-			    	if(!tar.exists() ) {
+ 			    	if(!tar.exists() ) {
 			    		tar.createNewFile();
 			    	}
 					Files.asCharSink(tar, Charset.forName("utf-8")).write(item.getContent());
@@ -114,7 +114,7 @@ public class IUtils {
 				};  		
 			    
 			}else if(item.getExt().equals(ClassEmbody.PROP_EXT)) { // write to the SRC_RESOURCES
-				String path =packagePathGen(baseFolder.getAbsolutePath()+File.separator+SRC_RESOURCES,item.getPackage_name());
+				String path =packagePathGen("", baseFolder.getAbsolutePath()+File.separator+SRC_RESOURCES);
 				File tf=new File(path);
 			    if(!tf.exists()) {//create the folders if it does not exist
 			    	tf.mkdirs();
