@@ -82,6 +82,7 @@ public class EntityClassGenerator {
 		   cd.append(this.genEmbeddableClassHeader(ce));
 
 			
+
 		}else {
 		   cd.append(this.genEntityClassHeader(ce));
 		}

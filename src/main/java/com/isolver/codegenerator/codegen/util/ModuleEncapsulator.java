@@ -6,8 +6,11 @@ public class ModuleEncapsulator {
     private ClassEmbody controller;
     private ClassEmbody repo;
     private ClassEmbody embed;
+    private EntityClassEntry ece;
     
     
+    
+
 	public ModuleEncapsulator() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -15,7 +18,12 @@ public class ModuleEncapsulator {
 	public ModuleEncapsulator(String module_id, ClassEmbody entity, ClassEmbody controller, ClassEmbody repo) {
 	this(module_id,entity, controller, repo,null);
 	}
-	
+	public EntityClassEntry getEce() {
+		return ece;
+	}
+	public void setEce(EntityClassEntry ece) {
+		this.ece = ece;
+	}
 	public ModuleEncapsulator(String module_id, ClassEmbody entity, ClassEmbody controller, ClassEmbody repo,
 			ClassEmbody embed) {
 		super();

@@ -158,6 +158,7 @@ public class GenericMetaDataController {
 	public String generateModuleByEntity(@RequestBody EntityClassEntry ce) {
 
 		ModuleEncapsulator me = new ModuleEncapsulator();
+		me.setEce(ce);
 		String uniqueID = UUID.randomUUID().toString();
 		String controller = this.controllerGenerator.genController(ce);
 		String ctrlClassName = this.controllerGenerator.genControllerName(ce);
@@ -218,7 +219,7 @@ public class GenericMetaDataController {
 			}
 		}
 		String mainclass =this.mainclassGenerator.genMainClassBody("DemoServices");
-		ClassEmbody maincb =new ClassEmbody(configuration.getPackage_name()+".main","DemoServices",mainclass, ClassEmbody.JAVA_EXT);
+		ClassEmbody maincb =new ClassEmbody(configuration.getPackage_name(),"DemoServices",mainclass, ClassEmbody.JAVA_EXT);
 	    clist.add(maincb);
 	
         String propfile=this.propertiesGenerator.genPropertiesBody();

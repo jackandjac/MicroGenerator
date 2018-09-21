@@ -56,7 +56,7 @@ public class ControllerGenerator {
 
 		CGUtil.genPackageImport(body,ce.getBasePackageName()+".controllers", this.importLib);
 		CGUtil.addLineBreak(body);
-		body.append("import " +configuration.getPackage_name()+".repos.*;");
+
 		CGUtil.addLineBreak(body);
 		body.append("import " +configuration.getPackage_name()+".controllers.*;");
 		CGUtil.addLineBreak(body);

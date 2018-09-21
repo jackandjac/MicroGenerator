@@ -36,7 +36,7 @@ public class PropertiesGenerator {
 		in.close();
 
 		ByteArrayOutputStream ostream =new ByteArrayOutputStream();
-		props.setProperty("spring.application.name", "microservices-demo");
+		props.setProperty("spring.application.name", "microserviceDemo");
 		props.store(ostream, null);
 		body.append(ostream.toString("utf-8"));
 		}catch(IOException e) {

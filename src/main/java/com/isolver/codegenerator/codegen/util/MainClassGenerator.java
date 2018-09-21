@@ -33,7 +33,7 @@ public class MainClassGenerator {
 	}
 
 	public String genMainClassBody(String mname) {
-		return this.genMainClassBody(mname, configuration.getPackage_name()+".main");
+		return this.genMainClassBody(mname, configuration.getPackage_name());
 	}
 	
 	public String genMainClassBody(String name, String package_name) {
