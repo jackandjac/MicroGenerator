@@ -38,7 +38,7 @@ public class BusinessLayerGeneratorTest {
 		rules.add(r2);
 		String res =blg.genRulesOnRecord("user",re, rules);
 		
-		assertEquals("(user.name.contains(\"@\") && (user.name.length()<10)",res);
+		assertEquals("((user.name.contains(\"@\")) && (user.name.length()<10))",res);
 	}
 
 }

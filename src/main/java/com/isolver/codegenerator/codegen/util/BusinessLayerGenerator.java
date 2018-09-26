@@ -17,7 +17,7 @@ public class BusinessLayerGenerator {
 	public static final String AUTOWIRED_TAG = "@Autowired";
 
 	public String genRulesOnRecord(String insName,RecordEntry re, List<Rule> rules) {
-		StringBuffer body =new StringBuffer("");
+		StringBuffer body =new StringBuffer("(");
 		
 		for(Rule rul:rules) {
 			if(this.isStringType(re)) {
@@ -30,7 +30,7 @@ public class BusinessLayerGenerator {
 					body.append("(").append(insName).append(".").append(re.getName()).append(".length()").append(rul.getContent()).append(")");
 				}else if(rul.getType().equals(Rule.CONTAINS_TYPE)) {
 					
-					body.append("(").append(insName).append(".").append(re.getName()).append(".contains(\"").append(rul.getContent()).append("\")"); 
+					body.append("(").append(insName).append(".").append(re.getName()).append(".contains(\"").append(rul.getContent()).append("\"))"); 
 				}
 				
 			}else if(this.isElementaryType(re) ) {
@@ -46,10 +46,10 @@ public class BusinessLayerGenerator {
 		
 		String res = body.toString();
 		res=res.substring(0, res.lastIndexOf("&&"));
-		return res.trim();
+		return res.trim()+")";
 	}
 	
-	public String genUpdate(EntityClassEntry ce,Map<String,List<Rule>> constraint) {
+	public String genUpdate(EntityClassEntry ce,Map<RecordEntry,List<Rule>> constraint) {
 		StringBuffer body = new StringBuffer("");
 		String path = this.genPath(ce, "update");
 		body.append(this.genMappingAnnotate(PUT_MAPPING_TAG,path, Optional.ofNullable(null)));
@@ -63,6 +63,11 @@ public class BusinessLayerGenerator {
 				.append(" ) { ");
 		CGUtil.addLineBreak(body, 2);
 		body.append("    ");
+		body.append("if(");
+		for(Map.Entry<RecordEntry, List<Rule>> entry: constraint.entrySet()) {
+		body.append(this.genRulesOnRecord(simpleName, entry.getKey(), entry.getValue())).append(" && ");
+		}
+		
 		
 		body.append(" service.save(").append(simpleName.toLowerCase()).append(");");
 		CGUtil.addLineBreak(body, 2);
