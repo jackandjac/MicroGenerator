@@ -192,7 +192,8 @@ public class GenericMetaDataController {
 	public List<Address> retrieveAllAddress(){
 		return addressRepo.findAll();
 	}
-	@GetMapping(path="/isolver/address_one/{id}")
+	@GetMapping(path="/isolver/"
+			+ "/{id}")
 	public Optional<Address> retrieveOneAddress(@PathVariable String id){
 		return addressRepo.findById(id);
 	}

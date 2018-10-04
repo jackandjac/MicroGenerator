@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
 public class BusinessLayerGenerator {
 	public static final String ZIP_PATTERN = "^[0-9]{5}(?:-[0-9]{4})?$";
 	
@@ -57,7 +60,7 @@ public class BusinessLayerGenerator {
 		String simpleName = CGUtil.genSimpleClassType(ce.getClassName());
 		String simpleId = CGUtil.genSimpleClassType(ce.getIdType());
 
-		body.append("public void ");
+		body.append("public ResponseEntity<String> ");
 		body.append("verify").append("Update").append(simpleName.substring(0, 1).toUpperCase()).append(simpleName.substring(1))
 				.append("(").append(REQUEST_BODY_TAG).append(" ").append(simpleName).append(" ").append(simpleName.toLowerCase())
 				.append(" ) { ");
@@ -68,9 +71,22 @@ public class BusinessLayerGenerator {
 		body.append(this.genRulesOnRecord(simpleName, entry.getKey(), entry.getValue())).append(" && ");
 		}
 		
-		
-		body.append(" service.save(").append(simpleName.toLowerCase()).append(");");
+ //		res=res.substring(0, res.lastIndexOf("&&"));
+		int pos = body.lastIndexOf(" && ");
+	    body = new StringBuffer (body.substring(0, pos) );
+	    body.append(") { ");
 		CGUtil.addLineBreak(body, 2);
+		body.append("    ");
+		CGUtil.addLineBreak(body);
+//		MultiValueMap<String, simpleName > param=new LinkedMultiValueMap<>();
+		body.append("MultiValueMap<String, ").append(simpleName).append(" > param=new LinkedMultiValueMap<>();");
+		CGUtil.addLineBreak(body);
+		body.append("param.add(\"").append(simpleName.toCharArray()).append("\",").append(simpleName.toCharArray()).append(");");
+		CGUtil.addLineBreak(body);
+		body.append("ResponseEntity<String> respEntity = new RestTemplate().postForEntity(\"").append(path).append("\",").append("param,").append("String.class);");
+		CGUtil.addLineBreak(body);
+		body.append("return respEntity;");
+		CGUtil.addLineBreak(body);
 		body.append("}");
 
 		return body.toString();
